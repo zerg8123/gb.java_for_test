@@ -1,8 +1,8 @@
 package ru.gb.HomeWork_1;
 
 public class Wall {
-    private int height;
-    private int number;
+    private final int height;
+    private final int number;
 
     public Wall(int height, int number) {
         this.height = height;

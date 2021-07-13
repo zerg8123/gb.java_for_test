@@ -3,7 +3,7 @@ package ru.gb.HomeWork_1;
 public class People implements CanJump, CanRun {
     private int runSpeed;
     private int jumpHeight;
-    private String name;
+    private final String name;
 
     public People(String name, int runSpeed, int jumpHeight) {
         this.name = name;

@@ -1,8 +1,8 @@
 package ru.gb.HomeWork_1;
 
 public class TreadMill {
-    private int lenght;
-    private int number;
+    private final int lenght;
+    private final int number;
 
     public TreadMill(int lenght, int number) {
         this.lenght = lenght;
