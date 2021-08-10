@@ -1,4 +1,4 @@
-package HomeWork_7;
+package HomeWork_7.AcuuWeather;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,6 +11,8 @@ public class Controller {
     public Controller() {
         variants.put(1, Period.NOW);
         variants.put(5, Period.FIVE_DAYS);
+        variants.put(2, Period.BD);
+        variants.put(3, Period.YA);
     }
 
     public void getWeather(String userInput, String selectCity) throws IOException {
@@ -22,6 +24,13 @@ public class Controller {
                 break;
             case FIVE_DAYS:
                 weatherModel.getWeather(selectCity, Period.FIVE_DAYS);
+                break;
+            case BD:
+                weatherModel.getSaveToDBWeather();
+                break;
+            case YA:
+                weatherModel.getWeather(selectCity, Period.YA);
+                break;
         }
     }
 }

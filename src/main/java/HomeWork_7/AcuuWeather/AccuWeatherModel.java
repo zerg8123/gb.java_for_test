@@ -1,10 +1,13 @@
-package HomeWork_7;
+package HomeWork_7.AcuuWeather;
 
+import HomeWork_7.AcuuWeather.entity.Weather;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 public class AccuWeatherModel extends GlobalParam implements WeatherModel {
 
@@ -31,7 +34,6 @@ public class AccuWeatherModel extends GlobalParam implements WeatherModel {
 
                 Response oneDayForecastResponse = okHttpClient.newCall(request).execute();
                 String oneDayWeatherResponse = oneDayForecastResponse.body().string();
-
                 String oneDayDateJsonKey = objectMapper.readTree(oneDayWeatherResponse).at(HEADLINE_TEXT).asText();
 
                 Double oneDayTemperatureMinJsonKey = objectMapper
@@ -46,12 +48,19 @@ public class AccuWeatherModel extends GlobalParam implements WeatherModel {
                         .readTree(oneDayWeatherResponse)
                         .at(DAILY_FORECAST).get(0).at(TEMPERATURE_MIN_UNIT).asText();
 
-                Double averageTemperature = (oneDayTemperatureMinJsonKey + oneDayTemperatureMaxJsonKey) / 2;
-                Double averageTemperatureCelsius = (averageTemperature - 32) / 1.8;
+                Double methodAverageTemperature = oneDayAverageTemperature(oneDayTemperatureMinJsonKey, oneDayTemperatureMaxJsonKey);
+                Double methodAverageTemperatureCelsius = OneDayAverageTemperatureCelsius(methodAverageTemperature);
 
                 System.out.printf("Средняя температура за день в городе %s - %s%s - %.2fС, Сегодня %s%n",
-                        selectedCity, averageTemperature, oneDaySymbolTemperatureJsonKey,
-                        averageTemperatureCelsius, oneDayDateJsonKey);
+                        selectedCity, methodAverageTemperature, oneDaySymbolTemperatureJsonKey,
+                        methodAverageTemperatureCelsius, oneDayDateJsonKey);
+
+                try {
+                    dataBaseRepository.saveWeatherToDataBase(
+                            new Weather(selectedCity, oneDayDateJsonKey, methodAverageTemperatureCelsius));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
                 break;
             case FIVE_DAYS:
@@ -90,19 +99,75 @@ public class AccuWeatherModel extends GlobalParam implements WeatherModel {
                             .readTree(fiveDayWeatherResponse)
                             .at(DAILY_FORECAST).get(i).at(TEMPERATURE_MIN_UNIT).asText();
 
-                    Double fiveDayAverageTemperature = (fiveDayTemperatureMinJsonKey + fiveDayTemperatureMaxJsonKey) / 2;
-
-                    Double fiveDayAverageTemperatureCelsius = (fiveDayAverageTemperature - 32) / 1.8;
                     String fiveDayDateJsonKey = objectMapper
                             .readTree(fiveDayWeatherResponse)
                             .at(DAILY_FORECAST).get(i).at(TEMPERATURE_DATE).asText();
 
+                    Double methodFiveDayAverageTemperature = fiveDayAverageTemperature(fiveDayTemperatureMinJsonKey,
+                            fiveDayTemperatureMaxJsonKey);
+                    Double methodFiveDayAverageTemperatureCelsius = fiveDayAverageTemperatureCelsius
+                            (methodFiveDayAverageTemperature);
+
                     System.out.printf("Средняя температура за %s в городе %s - %s%s - %.2fC%n",
-                            fiveDayDateJsonKey, selectedCity, fiveDayAverageTemperature,
-                            fiveDaySymbolTemperatureJsonKey, fiveDayAverageTemperatureCelsius);
+                            fiveDayDateJsonKey, selectedCity, methodFiveDayAverageTemperature,
+                            fiveDaySymbolTemperatureJsonKey, methodFiveDayAverageTemperatureCelsius);
                 }
                 break;
+
+            case YA:
+                HttpUrl httpUrl2 = new HttpUrl.Builder()
+                        .scheme(PROTOCOL_HTTPS)
+                        .host(BASE_HOST_YA)
+                        .addPathSegment(VERSION_YA)
+                        .addPathSegment(INFORMERS)
+                        .addQueryParameter(LAT_QUERY_PARAM, LAT)
+                        .addQueryParameter(LON_QUERY_PARAM, LON)
+                        .build();
+
+
+                Request request2 = new Request.Builder()
+                        .url(httpUrl2)
+                        .addHeader(API_KEY_YA_QUERY_PARAM, API_KEY_YA)
+                        .get()
+                        .build();
+
+                Response YaForecastResponse = okHttpClient.newCall(request2).execute();
+                String responseString = YaForecastResponse.body().string();
+
+                String yaDateJsonText = objectMapper
+                        .readTree(responseString)
+                        .at(FORECAST_DATE_YA).asText();
+
+                Integer yaTemperatureJsonInteger = objectMapper
+                        .readTree(responseString)
+                        .at(TEMPERATURE_YA).asInt();
+
+                System.out.printf("%s - температура на данный момент - %s%n", yaDateJsonText, yaTemperatureJsonInteger);
+
+                break;
         }
+    }
+
+    @Override
+    public List<Weather> getSaveToDBWeather() {
+        return dataBaseRepository.getSaveToDBWeather();
+    }
+
+
+    private static Double oneDayAverageTemperature(Double oneDayTemperatureMinJsonKey, Double oneDayTemperatureMaxJsonKey) {
+        return (oneDayTemperatureMinJsonKey + oneDayTemperatureMaxJsonKey) / 2;
+    }
+
+    private static Double OneDayAverageTemperatureCelsius(Double oneDayAverageTemperature) {
+        return (oneDayAverageTemperature - 32) / 1.8;
+    }
+
+    private static Double fiveDayAverageTemperature(Double fiveDayTemperatureMinJsonKey, Double fiveDayTemperatureMaxJsonKey) {
+        return (fiveDayTemperatureMinJsonKey + fiveDayTemperatureMaxJsonKey) / 2;
+    }
+
+    private static Double fiveDayAverageTemperatureCelsius(Double fiveDayAverageTemperature) {
+        return (fiveDayAverageTemperature - 32) / 1.8;
     }
 
     private static String detectedCityKey(String selectedCity) throws IOException {
