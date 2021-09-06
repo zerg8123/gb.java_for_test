@@ -9,14 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 
 public class ImgurApiTest extends BaseApiTest {
-
 
     public ImgurApiTest() throws IOException {
     }
@@ -43,10 +42,15 @@ public class ImgurApiTest extends BaseApiTest {
     void testGetAccountBase() {
 
         given()
-                .spec(requestSpecification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .auth()
+                .oauth2(getToken())
                 .expect()
                 .body(getHeaderDataUrl(), is(getUserName()))
-                .spec(responseSpecification)
+                .log()
+                .all()
+                .statusCode(200)
                 .when()
                 .get("3/account/{username}", getUserName());
 

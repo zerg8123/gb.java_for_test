@@ -1,9 +1,11 @@
 
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import lombok.Data;
+import utils.PropertyScanner;
 
 import java.io.IOException;
-
+@Data
 abstract class BaseApiTest {
 
     private final String token;
@@ -21,55 +23,6 @@ abstract class BaseApiTest {
     private final PropertyScanner scanner;
     public ResponseSpecification responseSpecification = null;
     public RequestSpecification requestSpecification = null;
-
-
-    public String getToken() {
-        return token;
-    }
-
-    public String getBaseUri() {
-        return baseUri;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getCommentId() {
-        return commentId;
-    }
-
-    public String getImageHash() {
-        return imageHash;
-    }
-
-    public String getStatusCode() {
-        return statusCode;
-    }
-
-    public String getHeaderDataAccUrl() {
-        return headerDataAccUrl;
-    }
-
-    public String getHeaderAuthName() {
-        return headerAuthName;
-    }
-
-    public String getStatusLine() {
-        return statusLine;
-    }
-
-    public String getResponseTime() {
-        return responseTime;
-    }
-
-    public String getHeaderDataUrl() {
-        return headerDataUrl;
-    }
-
-    public String getDataAlbumCover() {
-        return dataAlbumCover;
-    }
 
     public BaseApiTest() throws IOException {
         scanner = new PropertyScanner();
