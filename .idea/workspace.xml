@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2add41d1-7d70-4c20-a6f5-5b2bfc6c68f9" name="Default Changelist" comment="Complete HomeWork_9" />
+    <list default="true" id="2add41d1-7d70-4c20-a6f5-5b2bfc6c68f9" name="Default Changelist" comment="new project st" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -157,6 +157,7 @@
       <workItem from="1630507848616" duration="933000" />
       <workItem from="1630509020392" duration="713000" />
       <workItem from="1630511323387" duration="39000" />
+      <workItem from="1630511512501" duration="85000" />
     </task>
     <task id="LOCAL-00001" summary="new complete HomeWork_2">
       <created>1626861181487</created>
@@ -214,7 +215,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628593745911</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="new project st">
+      <created>1630511569820</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1630511569820</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -241,7 +249,8 @@
     <MESSAGE value="Complete HomeWork_7" />
     <MESSAGE value="Complete HomeWork_8" />
     <MESSAGE value="Complete HomeWork_9" />
-    <option name="LAST_COMMIT_MESSAGE" value="Complete HomeWork_9" />
+    <MESSAGE value="new project st" />
+    <option name="LAST_COMMIT_MESSAGE" value="new project st" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
